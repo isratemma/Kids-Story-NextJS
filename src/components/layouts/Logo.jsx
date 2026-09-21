@@ -4,18 +4,18 @@ import Image from 'next/image';
 
 const Logo = () => {
   return (
-    <div>
-      <Link href="/" className="flex items-center gap-1">
-        <Image
-          src="/assets/logo.png"
-          alt="Logo"
-          width={50}
-          height={50}
-          className="mr-2"
-        />
-        <h2 className="font-bold text-lg">Kids <span className='text-primary'>Story</span></h2>
-      </Link>
-    </div>
+    <Link href="/" className="flex items-center gap-2 group">
+      <Image
+        src="/favicon.ico"
+        alt="Kids Story Logo"
+        width={36}
+        height={36}
+        className="rounded-lg group-hover:scale-105 transition-transform duration-200"
+      />
+      <span className="text-lg font-bold tracking-tight text-gray-900 group-hover:text-primary transition-colors duration-200">
+        Kids <span className="text-primary">Story</span>
+      </span>
+    </Link>
   );
 };
 

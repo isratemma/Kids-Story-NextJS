@@ -8,10 +8,10 @@ const ProductCard = ({ product, index }) => {
   const discountedPrice = discount ? price - (price * discount) / 100 : price;
 
   return (
-    <div className="card border border-gray-200 bg-white text-black shadow-md transition duration-300 hover:shadow-xl">
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition duration-300 overflow-hidden flex flex-col">
       {/* Product Image */}
       <Link href={`/products/${index}`}>
-        <figure className="h-56 overflow-hidden bg-gray-100 cursor-pointer">
+        <div className="h-52 bg-gray-50 overflow-hidden">
           <img
             width={200}
             height={180}
@@ -19,32 +19,32 @@ const ProductCard = ({ product, index }) => {
             alt={title}
             className="w-full h-full object-cover hover:scale-105 transition duration-300"
           />
-        </figure>
+        </div>
       </Link>
 
-      <div className="card-body p-5">
+      <div className="p-5 flex flex-col flex-1 gap-2">
         {/* Title */}
         <Link href={`/products/${index}`}>
-          <h2 className="card-title text-lg font-semibold line-clamp-2 hover:text-primary transition-colors cursor-pointer">
+          <h2 className="text-base font-semibold text-gray-900 line-clamp-2 hover:text-primary transition-colors leading-snug">
             {title}
           </h2>
         </Link>
 
         {/* Rating + Reviews + Sold */}
-        <div className="flex items-center gap-3 text-sm mt-1">
+        <div className="flex items-center gap-2 text-xs text-gray-500">
           <div className="flex items-center gap-1">
-            <FaStar className="text-yellow-400" />
-            <span className="font-medium">{ratings}</span>
+            <FaStar className="text-yellow-400" aria-hidden="true" />
+            <span className="font-semibold text-gray-700">{ratings}</span>
           </div>
-
-          <span className="text-gray-500">({reviews} reviews)</span>
-
-          <span className="text-gray-500">{sold} sold</span>
+          <span>·</span>
+          <span>{reviews} reviews</span>
+          <span>·</span>
+          <span>{sold} sold</span>
         </div>
 
         {/* Price */}
-        <div className="flex items-center gap-2 mt-2">
-          <span className="text-xl font-bold text-black">
+        <div className="flex items-center gap-2 mt-auto pt-2">
+          <span className="text-xl font-bold text-gray-900">
             ৳{discountedPrice}
           </span>
 
@@ -53,19 +53,18 @@ const ProductCard = ({ product, index }) => {
               <span className="text-sm text-gray-400 line-through">
                 ৳{price}
               </span>
-
-              <span className="badge badge-error text-black">-{discount}%</span>
+              <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full">
+                -{discount}%
+              </span>
             </>
           )}
         </div>
 
         {/* Add to Cart */}
-        <div className="card-actions mt-4">
-          <button className="btn btn-primary w-full text-black">
-            <FaShoppingCart />
-            Add to Cart
-          </button>
-        </div>
+        <button className="btn btn-primary w-full rounded-xl text-white font-semibold mt-2">
+          <FaShoppingCart aria-hidden="true" />
+          Add to Cart
+        </button>
       </div>
     </div>
   );
