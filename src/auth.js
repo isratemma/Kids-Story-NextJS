@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import Google from 'next-auth/providers/google';
 import bcrypt from 'bcryptjs';
 import { dbConnect, collection } from '@/lib/dbConnect';
 
@@ -7,6 +8,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: 'jwt' },
 
   providers: [
+    Google,
     Credentials({
       name: 'Credentials',
       credentials: {
