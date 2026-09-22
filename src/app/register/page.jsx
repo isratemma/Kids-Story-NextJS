@@ -49,7 +49,8 @@ export default function RegisterPage() {
     if (result?.error) {
       setServerError(result.error);
     } else {
-      router.push('/login?registered=1');
+      router.push('/');
+      router.refresh();
     }
   };
 

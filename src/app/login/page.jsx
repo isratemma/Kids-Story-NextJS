@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FiEye, FiEyeOff, FiMail, FiLock } from 'react-icons/fi';
+import { loginUser } from '@/actions/server/auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -24,19 +24,16 @@ export default function LoginPage() {
       setError('Please fill in all fields.');
       return;
     }
+
     setLoading(true);
     setError('');
 
-    const res = await signIn('credentials', {
-      email: form.email,
-      password: form.password,
-      redirect: false,
-    });
+    const result = await loginUser({ email: form.email, password: form.password });
 
     setLoading(false);
 
-    if (res?.error) {
-      setError('Invalid email or password.');
+    if (result?.error) {
+      setError(result.error);
     } else {
       router.push('/');
       router.refresh();
@@ -72,14 +69,8 @@ export default function LoginPage() {
                   <FiMail className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="you@example.com"
+                  id="email" name="email" type="email" autoComplete="email" required
+                  value={form.email} onChange={handleChange} placeholder="you@example.com"
                   className="input input-bordered w-full pl-9 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary"
                 />
               </div>
@@ -100,14 +91,9 @@ export default function LoginPage() {
                   <FiLock className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  required
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
+                  id="password" name="password" type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password" required
+                  value={form.password} onChange={handleChange} placeholder="••••••••"
                   className="input input-bordered w-full pl-9 pr-10 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary"
                 />
                 <button
@@ -124,8 +110,7 @@ export default function LoginPage() {
             </div>
 
             <button
-              type="submit"
-              disabled={loading}
+              type="submit" disabled={loading}
               className="btn btn-primary w-full rounded-xl text-white font-semibold mt-2"
             >
               {loading
