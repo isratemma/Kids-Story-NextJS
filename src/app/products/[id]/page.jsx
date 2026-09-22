@@ -53,7 +53,9 @@ export default async function ProductDetailPage({ params }) {
     qna,
   } = product;
 
-  const discountedPrice = discount ? price - (price * discount) / 100 : price;
+  const discountedPrice = discount
+    ? Math.round((price - (price * discount) / 100) * 100) / 100
+    : price;
 
   return (
     <div className="min-h-screen bg-white">

@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Volumes/Volume-2%20(100%20GB)/Kids%20Story/Hero-Kidz-assets/kids-story/src/components/buttons/NavLInk.jsx"],"sourcesContent":["'use client';\n\nimport Link from 'next/link';\nimport { usePathname } from 'next/navigation';\n\nconst NavLInk = ({ href, children }) => {\n  const pathname = usePathname();\n  const isActive =\n    pathname === href || (href !== '/' && pathname.startsWith(href));\n\n  return (\n    <Link\n      className={`${isActive ? 'text-primary' : ''} font-medium`}\n      href={href}\n    >\n      {children}\n    </Link>\n  );\n};\n\nexport default NavLInk;\n"],"names":["NavLInk","href","children","pathname","isActive","startsWith","className"],"mappings":";;;;;AAEA;AACA;;;AAHA;;;AAKA,MAAMA,UAAU,CAAC,EAAEC,IAAI,EAAEC,QAAQ,EAAE;;IACjC,MAAMC,WAAW,IAAA,oJAAW;IAC5B,MAAMC,WACJD,aAAaF,QAASA,SAAS,OAAOE,SAASE,UAAU,CAACJ;IAE5D,qBACE,6LAAC,0KAAI;QACHK,WAAW,GAAGF,WAAW,iBAAiB,GAAG,YAAY,CAAC;QAC1DH,MAAMA;kBAELC;;;;;;AAGP;GAbMF;;QACa,oJAAW;;;KADxBA;uCAeSA"}}]
+}

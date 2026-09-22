@@ -10,7 +10,9 @@ const ProductCard = ({ product, index }) => {
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
 
-  const discountedPrice = discount ? price - (price * discount) / 100 : price;
+  const discountedPrice = discount
+    ? Math.round((price - (price * discount) / 100) * 100) / 100
+    : price;
 
   const handleAddToCart = () => {
     addToCart({

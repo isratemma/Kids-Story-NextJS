@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Volumes/Volume-2%20(100%20GB)/Kids%20Story/Hero-Kidz-assets/kids-story/src/app/error.jsx"],"sourcesContent":["\"use client\"\nimport React from 'react';\nimport Link from 'next/link';\nimport { BiSolidErrorAlt } from 'react-icons/bi';\n\nconst error = () => {\n  return (\n    <div className=\"flex flex-col min-h-screen justify-center items-center gap-5 \">\n      <BiSolidErrorAlt size={100} className=\"text-primary\"></BiSolidErrorAlt>\n      <h2 className=\"text-4xl font-bold\">Something went Wrong</h2>\n      <Link href={'/'} className=\"btn\">\n        Go to home\n      </Link>\n    </div>\n  );\n};\n\nexport default error;\n"],"names":["error","className","size","href"],"mappings":";;;;;AACA;AACA;AACA;AAHA;;;;;AAKA,MAAMA,QAAQ;IACZ,qBACE,6LAAC;QAAIC,WAAU;;0BACb,6LAAC,oKAAe;gBAACC,MAAM;gBAAKD,WAAU;;;;;;0BACtC,6LAAC;gBAAGA,WAAU;0BAAqB;;;;;;0BACnC,6LAAC,0KAAI;gBAACE,MAAM;gBAAKF,WAAU;0BAAM;;;;;;;;;;;;AAKvC;uCAEeD"}}]
+}

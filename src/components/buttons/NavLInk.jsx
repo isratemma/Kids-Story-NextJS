@@ -5,14 +5,14 @@ import { usePathname } from 'next/navigation';
 
 const NavLInk = ({ href, children }) => {
   const pathname = usePathname();
+
+  // Strip hash for comparison — /#products should be active on /
+  const hrefPath = href.split('#')[0] || '/';
   const isActive =
-    pathname === href || (href !== '/' && pathname.startsWith(href));
+    pathname === hrefPath || (hrefPath !== '/' && pathname.startsWith(hrefPath));
 
   return (
-    <Link
-      className={`${isActive ? 'text-primary' : ''} font-medium`}
-      href={href}
-    >
+    <Link className={`${isActive ? 'text-primary' : ''} font-medium`} href={href}>
       {children}
     </Link>
   );

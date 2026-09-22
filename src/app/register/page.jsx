@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { FiEye, FiEyeOff, FiMail, FiLock, FiUser } from 'react-icons/fi';
 import { registerUser } from '@/actions/server/auth';
 
@@ -38,16 +39,31 @@ export default function RegisterPage() {
     setLoading(true);
     setServerError('');
 
+    // Step 1: save user to DB
     const result = await registerUser({
       name: form.name,
       email: form.email,
       password: form.password,
     });
 
+    if (result?.error) {
+      setLoading(false);
+      setServerError(result.error);
+      return;
+    }
+
+    // Step 2: auto-login via next-auth/react (client-side, can set cookies correctly)
+    const res = await signIn('credentials', {
+      email: form.email,
+      password: form.password,
+      redirect: false,
+    });
+
     setLoading(false);
 
-    if (result?.error) {
-      setServerError(result.error);
+    if (res?.error) {
+      // Registration succeeded but auto-login failed — send to login
+      router.push('/login?registered=1');
     } else {
       router.push('/');
       router.refresh();
@@ -78,11 +94,9 @@ export default function RegisterPage() {
                 <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
                   <FiUser className="h-4 w-4" aria-hidden="true" />
                 </span>
-                <input
-                  id="name" name="name" type="text" autoComplete="name" required
+                <input id="name" name="name" type="text" autoComplete="name" required
                   value={form.name} onChange={handleChange} placeholder="Your name"
-                  className={`input input-bordered w-full pl-9 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary ${errors.name ? 'input-error' : ''}`}
-                />
+                  className={`input input-bordered w-full pl-9 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary ${errors.name ? 'input-error' : ''}`} />
               </div>
               {errors.name && <p className="mt-1.5 text-xs text-red-500">{errors.name}</p>}
             </div>
@@ -94,11 +108,9 @@ export default function RegisterPage() {
                 <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
                   <FiMail className="h-4 w-4" aria-hidden="true" />
                 </span>
-                <input
-                  id="email" name="email" type="email" autoComplete="email" required
+                <input id="email" name="email" type="email" autoComplete="email" required
                   value={form.email} onChange={handleChange} placeholder="you@example.com"
-                  className={`input input-bordered w-full pl-9 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary ${errors.email ? 'input-error' : ''}`}
-                />
+                  className={`input input-bordered w-full pl-9 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary ${errors.email ? 'input-error' : ''}`} />
               </div>
               {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email}</p>}
             </div>
@@ -110,38 +122,34 @@ export default function RegisterPage() {
                 <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
                   <FiLock className="h-4 w-4" aria-hidden="true" />
                 </span>
-                <input
-                  id="password" name="password" type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password" required
-                  value={form.password} onChange={handleChange} placeholder="Min. 6 characters"
-                  className={`input input-bordered w-full pl-9 pr-10 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary ${errors.password ? 'input-error' : ''}`}
-                />
+                <input id="password" name="password" type={showPassword ? 'text' : 'password'}
+                  autoComplete="new-password" required value={form.password} onChange={handleChange}
+                  placeholder="Min. 6 characters"
+                  className={`input input-bordered w-full pl-9 pr-10 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary ${errors.password ? 'input-error' : ''}`} />
                 <button type="button" aria-label={showPassword ? 'Hide password' : 'Show password'}
                   onClick={() => setShowPassword((v) => !v)}
                   className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600">
-                  {showPassword ? <FiEyeOff className="h-4 w-4" aria-hidden="true" /> : <FiEye className="h-4 w-4" aria-hidden="true" />}
+                  {showPassword ? <FiEyeOff className="h-4 w-4" /> : <FiEye className="h-4 w-4" />}
                 </button>
               </div>
               {errors.password && <p className="mt-1.5 text-xs text-red-500">{errors.password}</p>}
             </div>
 
-            {/* Confirm Password */}
+            {/* Confirm */}
             <div>
               <label htmlFor="confirm" className="block text-sm font-medium text-gray-700 mb-1.5">Confirm password</label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
                   <FiLock className="h-4 w-4" aria-hidden="true" />
                 </span>
-                <input
-                  id="confirm" name="confirm" type={showConfirm ? 'text' : 'password'}
-                  autoComplete="new-password" required
-                  value={form.confirm} onChange={handleChange} placeholder="Repeat password"
-                  className={`input input-bordered w-full pl-9 pr-10 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary ${errors.confirm ? 'input-error' : ''}`}
-                />
+                <input id="confirm" name="confirm" type={showConfirm ? 'text' : 'password'}
+                  autoComplete="new-password" required value={form.confirm} onChange={handleChange}
+                  placeholder="Repeat password"
+                  className={`input input-bordered w-full pl-9 pr-10 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary ${errors.confirm ? 'input-error' : ''}`} />
                 <button type="button" aria-label={showConfirm ? 'Hide password' : 'Show password'}
                   onClick={() => setShowConfirm((v) => !v)}
                   className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600">
-                  {showConfirm ? <FiEyeOff className="h-4 w-4" aria-hidden="true" /> : <FiEye className="h-4 w-4" aria-hidden="true" />}
+                  {showConfirm ? <FiEyeOff className="h-4 w-4" /> : <FiEye className="h-4 w-4" />}
                 </button>
               </div>
               {errors.confirm && <p className="mt-1.5 text-xs text-red-500">{errors.confirm}</p>}
@@ -149,9 +157,7 @@ export default function RegisterPage() {
 
             <button type="submit" disabled={loading}
               className="btn btn-primary w-full rounded-xl text-white font-semibold mt-2">
-              {loading
-                ? <span className="loading loading-spinner loading-sm" aria-label="Creating account" />
-                : 'Create account'}
+              {loading ? <span className="loading loading-spinner loading-sm" /> : 'Create account'}
             </button>
           </form>
 

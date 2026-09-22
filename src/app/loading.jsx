@@ -1,17 +1,10 @@
-import React from 'react';
 import Logo from '@/components/layouts/Logo';
 
-const loading = () => {
+export default function Loading() {
   return (
-    <div>
-      <div className="flex flex-col min-h-screen justify-center items-center gap-5 ">
-        <h2 className="text-5xl font-bold animated-pulse">Loading</h2>
-        <div>
-          <Logo></Logo>
-        </div>
-      </div>
+    <div className="flex flex-col min-h-screen justify-center items-center gap-5">
+      <Logo />
+      <h2 className="text-5xl font-bold animate-pulse text-gray-900">Loading…</h2>
     </div>
   );
-};
-
-export default loading;
+}
