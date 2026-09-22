@@ -20,7 +20,8 @@ const ProductCard = ({ product, index }) => {
 
   const handleAddToCart = () => {
     if (!session) {
-      router.push('/login');
+      const callbackUrl = encodeURIComponent(window.location.pathname);
+      router.push(`/login?callbackUrl=${callbackUrl}`);
       return;
     }
     addToCart({ id: index, title, image, price, discountedPrice, discount });

@@ -14,7 +14,8 @@ export default function AddToCartButton({ product, className = '' }) {
 
   const handleClick = () => {
     if (!session) {
-      router.push('/login');
+      const callbackUrl = encodeURIComponent(window.location.pathname);
+      router.push(`/login?callbackUrl=${callbackUrl}`);
       return;
     }
 

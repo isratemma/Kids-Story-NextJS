@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { FiEye, FiEyeOff, FiMail, FiLock, FiUser } from 'react-icons/fi';
 import { registerUser } from '@/actions/server/auth';
@@ -20,6 +20,8 @@ function GoogleIcon() {
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -56,12 +58,12 @@ export default function RegisterPage() {
     const res = await signIn('credentials', { email: form.email, password: form.password, redirect: false });
     setLoading(false);
     if (res?.error) { router.push('/login?registered=1'); }
-    else { router.push('/'); router.refresh(); }
+    else { router.push(callbackUrl); router.refresh(); }
   };
 
   const handleGoogle = async () => {
     setGoogleLoading(true);
-    await signIn('google', { callbackUrl: '/' });
+    await signIn('google', { callbackUrl });
   };
 
   return (
@@ -171,7 +173,10 @@ export default function RegisterPage() {
 
           <p className="mt-6 text-center text-sm text-gray-500">
             Already have an account?{' '}
-            <Link href="/login" className="font-semibold text-primary hover:underline">Sign in</Link>
+            <Link
+              href={`/login${callbackUrl !== '/' ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`}
+              className="font-semibold text-primary hover:underline"
+            >Sign in</Link>
           </p>
         </div>
       </div>
