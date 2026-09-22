@@ -2,9 +2,12 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { FiEye, FiEyeOff, FiMail, FiLock } from 'react-icons/fi';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
@@ -17,19 +20,34 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!form.email || !form.password) {
+      setError('Please fill in all fields.');
+      return;
+    }
     setLoading(true);
-    // TODO: wire up auth
-    setTimeout(() => setLoading(false), 1200);
+    setError('');
+
+    const res = await signIn('credentials', {
+      email: form.email,
+      password: form.password,
+      redirect: false,
+    });
+
+    setLoading(false);
+
+    if (res?.error) {
+      setError('Invalid email or password.');
+    } else {
+      router.push('/');
+      router.refresh();
+    }
   };
 
   return (
     <div className="min-h-[80vh] bg-white flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-
-        {/* Card */}
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 sm:p-10">
 
-          {/* Header */}
           <div className="mb-8 text-center">
             <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
             <p className="mt-2 text-sm text-gray-500">
@@ -37,22 +55,16 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Error */}
           {error && (
             <div className="mb-5 rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-600">
               {error}
             </div>
           )}
 
-          {/* Form */}
           <form onSubmit={handleSubmit} noValidate className="space-y-5">
-
             {/* Email */}
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1.5"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
                 Email address
               </label>
               <div className="relative">
@@ -76,16 +88,10 @@ export default function LoginPage() {
             {/* Password */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Password
                 </label>
-                <a
-                  href="#"
-                  className="text-xs font-medium text-primary hover:underline"
-                >
+                <a href="#" className="text-xs font-medium text-primary hover:underline">
                   Forgot password?
                 </a>
               </div>
@@ -110,47 +116,36 @@ export default function LoginPage() {
                   onClick={() => setShowPassword((v) => !v)}
                   className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? (
-                    <FiEyeOff className="h-4 w-4" aria-hidden="true" />
-                  ) : (
-                    <FiEye className="h-4 w-4" aria-hidden="true" />
-                  )}
+                  {showPassword
+                    ? <FiEyeOff className="h-4 w-4" aria-hidden="true" />
+                    : <FiEye className="h-4 w-4" aria-hidden="true" />}
                 </button>
               </div>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
               className="btn btn-primary w-full rounded-xl text-white font-semibold mt-2"
             >
-              {loading ? (
-                <span className="loading loading-spinner loading-sm" aria-label="Signing in" />
-              ) : (
-                'Sign in'
-              )}
+              {loading
+                ? <span className="loading loading-spinner loading-sm" aria-label="Signing in" />
+                : 'Sign in'}
             </button>
           </form>
 
-          {/* Divider */}
           <div className="my-6 flex items-center gap-3">
             <hr className="flex-1 border-gray-100" />
             <span className="text-xs text-gray-400">or</span>
             <hr className="flex-1 border-gray-100" />
           </div>
 
-          {/* Register link */}
           <p className="text-center text-sm text-gray-500">
             Don&apos;t have an account?{' '}
-            <Link
-              href="/register"
-              className="font-semibold text-primary hover:underline"
-            >
+            <Link href="/register" className="font-semibold text-primary hover:underline">
               Create one
             </Link>
           </p>
-
         </div>
       </div>
     </div>
