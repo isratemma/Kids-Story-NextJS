@@ -12,9 +12,23 @@ export async function generateMetadata({ params }) {
   const { id } = await params;
   const product = products[Number(id)];
   if (!product) return { title: 'Product Not Found' };
+
+  const description = product.description?.slice(0, 150) ?? '';
+
   return {
-    title: `${product.title} | Kids Story`,
-    description: product.description?.slice(0, 150),
+    title: product.title,
+    description,
+    openGraph: {
+      title: product.title,
+      description,
+      images: [{ url: product.image, alt: product.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: product.title,
+      description,
+      images: [product.image],
+    },
   };
 }
 
