@@ -3,11 +3,15 @@
 import { useState } from 'react';
 import { FaStar, FaShoppingCart, FaCheck } from 'react-icons/fa';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useCart } from '@/context/CartContext';
 
 const ProductCard = ({ product, index }) => {
   const { title, image, ratings, reviews, sold, price, discount } = product;
   const { addToCart } = useCart();
+  const { data: session } = useSession();
+  const router = useRouter();
   const [added, setAdded] = useState(false);
 
   const discountedPrice = discount
@@ -15,14 +19,11 @@ const ProductCard = ({ product, index }) => {
     : price;
 
   const handleAddToCart = () => {
-    addToCart({
-      id: index,
-      title,
-      image,
-      price,
-      discountedPrice,
-      discount,
-    });
+    if (!session) {
+      router.push('/login');
+      return;
+    }
+    addToCart({ id: index, title, image, price, discountedPrice, discount });
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };
@@ -64,9 +65,7 @@ const ProductCard = ({ product, index }) => {
 
         {/* Price */}
         <div className="flex items-center gap-2 mt-auto pt-2">
-          <span className="text-xl font-bold text-gray-900">
-            ৳{discountedPrice}
-          </span>
+          <span className="text-xl font-bold text-gray-900">৳{discountedPrice}</span>
           {discount > 0 && (
             <>
               <span className="text-sm text-gray-400 line-through">৳{price}</span>
@@ -84,15 +83,9 @@ const ProductCard = ({ product, index }) => {
           aria-label={added ? 'Added to cart' : 'Add to cart'}
         >
           {added ? (
-            <>
-              <FaCheck aria-hidden="true" />
-              Added!
-            </>
+            <><FaCheck aria-hidden="true" /> Added!</>
           ) : (
-            <>
-              <FaShoppingCart aria-hidden="true" />
-              Add to Cart
-            </>
+            <><FaShoppingCart aria-hidden="true" /> Add to Cart</>
           )}
         </button>
       </div>

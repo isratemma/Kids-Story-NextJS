@@ -3,6 +3,7 @@ import './globals.css';
 import Navbar from '@/components/layouts/Navbar';
 import Footer from '@/components/layouts/Footer';
 import { CartProvider } from '@/context/CartContext';
+import Providers from '@/components/Providers';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -124,7 +125,7 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <CartProvider>
+        <Providers>
           <header className="py-2 md:w-11/12 mx-auto">
             <Navbar />
           </header>
@@ -134,7 +135,7 @@ export default function RootLayout({ children }) {
           <footer className="py-2 md:w-11/12 mx-auto">
             <Footer />
           </footer>
-        </CartProvider>
+        </Providers>
       </body>
     </html>
   );
