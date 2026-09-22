@@ -1,8 +1,9 @@
 import products from '@/data/toys.json';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { FaStar, FaShoppingCart } from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 import { FiArrowLeft, FiShoppingBag } from 'react-icons/fi';
+import AddToCartButton from '@/components/buttons/AddToCartButton';
 
 export async function generateStaticParams() {
   return products.map((_, index) => ({ id: String(index) }));
@@ -137,10 +138,9 @@ export default async function ProductDetailPage({ params }) {
 
               {/* Buttons */}
               <div className="flex flex-wrap gap-3 mt-2">
-                <button className="btn btn-primary rounded-full px-8 text-white font-semibold">
-                  <FaShoppingCart aria-hidden="true" />
-                  Add to Cart
-                </button>
+                <AddToCartButton
+                  product={{ id: Number(id), title, image, price, discount }}
+                />
                 <Link href="/cart">
                   <button className="btn btn-outline rounded-full px-8 font-semibold text-gray-700 border-gray-300 hover:bg-gray-50">
                     <FiShoppingBag aria-hidden="true" />

@@ -1,15 +1,33 @@
-import React from 'react';
-import { FaStar, FaShoppingCart } from 'react-icons/fa';
+'use client';
+
+import { useState } from 'react';
+import { FaStar, FaShoppingCart, FaCheck } from 'react-icons/fa';
 import Link from 'next/link';
+import { useCart } from '@/context/CartContext';
 
 const ProductCard = ({ product, index }) => {
   const { title, image, ratings, reviews, sold, price, discount } = product;
+  const { addToCart } = useCart();
+  const [added, setAdded] = useState(false);
 
   const discountedPrice = discount ? price - (price * discount) / 100 : price;
 
+  const handleAddToCart = () => {
+    addToCart({
+      id: index,
+      title,
+      image,
+      price,
+      discountedPrice,
+      discount,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
+
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition duration-300 overflow-hidden flex flex-col">
-      {/* Product Image */}
+      {/* Image */}
       <Link href={`/products/${index}`}>
         <div className="h-52 bg-gray-50 overflow-hidden">
           <img
@@ -30,7 +48,7 @@ const ProductCard = ({ product, index }) => {
           </h2>
         </Link>
 
-        {/* Rating + Reviews + Sold */}
+        {/* Rating */}
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <div className="flex items-center gap-1">
             <FaStar className="text-yellow-400" aria-hidden="true" />
@@ -47,12 +65,9 @@ const ProductCard = ({ product, index }) => {
           <span className="text-xl font-bold text-gray-900">
             ৳{discountedPrice}
           </span>
-
           {discount > 0 && (
             <>
-              <span className="text-sm text-gray-400 line-through">
-                ৳{price}
-              </span>
+              <span className="text-sm text-gray-400 line-through">৳{price}</span>
               <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full">
                 -{discount}%
               </span>
@@ -61,9 +76,22 @@ const ProductCard = ({ product, index }) => {
         </div>
 
         {/* Add to Cart */}
-        <button className="btn btn-primary w-full rounded-xl text-white font-semibold mt-2">
-          <FaShoppingCart aria-hidden="true" />
-          Add to Cart
+        <button
+          onClick={handleAddToCart}
+          className="btn btn-primary w-full rounded-xl text-white font-semibold mt-2"
+          aria-label={added ? 'Added to cart' : 'Add to cart'}
+        >
+          {added ? (
+            <>
+              <FaCheck aria-hidden="true" />
+              Added!
+            </>
+          ) : (
+            <>
+              <FaShoppingCart aria-hidden="true" />
+              Add to Cart
+            </>
+          )}
         </button>
       </div>
     </div>

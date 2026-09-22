@@ -2,8 +2,7 @@ import React from 'react';
 import Logo from './Logo';
 import NavLInk from '../buttons/NavLInk';
 import Link from 'next/link';
-import { FiShoppingCart } from 'react-icons/fi';
-
+import CartIcon from './CartIcon';
 
 const Navbar = () => {
   const nav = (
@@ -20,13 +19,12 @@ const Navbar = () => {
       <li>
         <NavLInk href={'/contact'}>Contact</NavLInk>
       </li>
-      
     </>
   );
 
   return (
     <div>
-      <div className="navbar bg-base-100 ">
+      <div className="navbar bg-base-100">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -38,13 +36,12 @@ const Navbar = () => {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                {' '}
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
                   d="M4 6h16M4 12h8m-8 6h16"
-                />{' '}
+                />
               </svg>
             </div>
             <ul
@@ -54,23 +51,13 @@ const Navbar = () => {
               {nav}
             </ul>
           </div>
-
-          <Logo></Logo>
+          <Logo />
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{nav}</ul>
         </div>
         <div className="navbar-end gap-2">
-          <Link
-            href="/cart"
-            aria-label="Open shopping cart"
-            className="btn btn-ghost btn-circle relative"
-          >
-            <FiShoppingCart className="h-5 w-5" aria-hidden="true" />
-            <span className="badge badge-primary badge-sm absolute -right-1 -top-1 border-2 border-base-100">
-              2
-            </span>
-          </Link>
+          <CartIcon />
           <Link href={'/login'}>
             <button className="btn btn-primary">Login</button>
           </Link>
